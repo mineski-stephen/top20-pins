@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PH Mobile Games Revenue Report</title>
+<title>Philippine Gaming Revenue & Pins Research Report</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -116,14 +116,44 @@ footer strong{color:#fff}
 .method-steps li{position:relative;padding:16px 0 16px 56px;border-bottom:1px solid var(--border);font-size:0.95rem;line-height:1.75;color:var(--text2)}
 .method-steps li:last-child{border-bottom:none}
 .method-steps li::before{counter-increment:step;content:counter(step);position:absolute;left:0;top:14px;width:38px;height:38px;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.ranking-item-enhanced{padding:18px 20px;border:1px solid var(--border);border-radius:10px;margin-bottom:12px;background:var(--card);transition:box-shadow .2s}
+.ranking-item-enhanced:hover{box-shadow:0 2px 12px rgba(0,0,0,0.08)}
+.rank-header{display:flex;align-items:flex-start;gap:14px}
+.rank-info-enhanced{flex:1;min-width:0}
+.rank-top-line{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.rank-revenue-enhanced{text-align:right;flex-shrink:0}
+.annual-amount{font-size:1.2rem;font-weight:800;color:var(--teal)}
+.monthly-amount{font-size:0.82rem;color:var(--text2);font-weight:500}
+.rank-publisher{font-size:0.9rem;color:var(--text);font-weight:600;margin-bottom:2px}
+.rank-address{font-size:0.8rem;color:var(--text2);line-height:1.5;margin-bottom:8px;padding:6px 10px;background:var(--bg);border-radius:6px}
+.rank-platforms{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.platform-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:0.73rem;font-weight:600;text-transform:uppercase;letter-spacing:0.3px}
+.platform-badge.mobile{background:#E8F5F3;color:var(--teal)}
+.platform-badge.desktop{background:#EDF0F5;color:var(--navy)}
+.platform-badge.playstation{background:#E8EAF6;color:#1565C0}
+.platform-badge.xbox{background:#E8F5E9;color:#2E7D32}
+.rank-stores{display:flex;gap:5px;flex-wrap:wrap}
+.store-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:600;background:#F5F5F5;color:var(--text2);border:1px solid var(--border)}
+.rank-stores-label{font-size:0.78rem;font-weight:600;color:var(--navy);margin-bottom:4px}
+.faq-item{margin-bottom:20px;padding:22px 26px;background:var(--card);border:1px solid var(--border);border-radius:10px}
+.faq-question{font-size:1.05rem;font-weight:700;color:var(--navy);margin-bottom:10px}
+.faq-answer{font-size:0.92rem;color:var(--text);line-height:1.8}
+.faq-answer ul,.faq-answer ol{margin:8px 0 0 20px}
+.faq-answer li{margin-bottom:6px}
+.faq-answer strong{color:var(--navy)}
+@media(max-width:768px){
+  .rank-top-line{flex-direction:column;gap:6px}
+  .rank-revenue-enhanced{text-align:left}
+  .rank-header{flex-direction:column;gap:8px}
+}
 </style>
 </head>
 <body>
 
 <header>
   <div class="container">
-    <h1>Philippine Mobile Games Spending Report</h1>
-    <p>Top-grossing games ranked by estimated Filipino spender revenue per month — sourced from AppFigures &amp; SensorTower</p>
+    <h1>Philippine Gaming Revenue &amp; Pins Research Report</h1>
+    <p>Top 20 games ranked by estimated annual PH revenue — with platform availability, top-up store coverage, and publisher details</p>
   </div>
 </header>
 
@@ -149,7 +179,8 @@ footer strong{color:#fff}
 <section id="kpi-section">
   <div class="container">
     <div class="kpi-grid">
-      <div class="kpi-card"><div class="kpi-value" id="kpi-revenue">—</div><div class="kpi-label">Est. PH Adjusted Revenue / Month</div></div>
+      <div class="kpi-card" style="border-left:4px solid var(--teal)"><div class="kpi-value" id="kpi-annual-revenue" style="color:var(--teal)">—</div><div class="kpi-label">Est. Annual PH Pins Revenue</div></div>
+      <div class="kpi-card"><div class="kpi-value" id="kpi-revenue">—</div><div class="kpi-label">Est. PH Revenue / Month</div></div>
       <div class="kpi-card"><div class="kpi-value" id="kpi-games">—</div><div class="kpi-label">Games Tracked</div></div>
       <div class="kpi-card"><div class="kpi-value" id="kpi-top-game">—</div><div class="kpi-label">Top Game</div></div>
       <div class="kpi-card"><div class="kpi-value" id="kpi-top-publisher">—</div><div class="kpi-label">Top Publisher</div></div>
@@ -180,9 +211,9 @@ footer strong{color:#fff}
 
 <section id="revenue-section">
   <div class="container">
-    <h2 class="section-title">Monthly Revenue Ranking by Spender Revenue</h2>
-    <p class="section-subtitle">Games ranked by estimated PH spender revenue per month (iOS + Android combined). Ad-heavy games adjusted with 0.2x multiplier.</p>
-    <ol class="ranking-list" id="rankingList"></ol>
+    <h2 class="section-title">Top PH Games — Annual Revenue, Platforms &amp; Pins Stores</h2>
+    <p class="section-subtitle">Games ranked by estimated annual PH spender revenue (iOS + Android combined). Each entry shows platform availability, where to purchase pins/top-ups, and publisher office details.</p>
+    <ol class="ranking-list" id="rankingList" style="max-width:100%"></ol>
     <div class="callout">
       <strong>How the Ad-Revenue Adjustment Works:</strong> All revenue figures in this report represent <strong>estimated monthly revenue</strong>, not totals. Many mobile games generate monthly revenue through both in-app purchases (spenders) and advertisements (non-spenders). For games that list "Ads" as a revenue source, the estimated monthly PH revenue is multiplied by <strong>0.2 (20%)</strong> to approximate the spender-only portion. This means only an estimated 20% of their reported monthly revenue is attributed to actual player spending, while the remaining 80% is assumed to come from ad impressions and views. Games that rely solely on in-app purchases or subscriptions are shown at full monthly value.
     </div>
@@ -245,7 +276,7 @@ footer strong{color:#fff}
     </div>
 
     <div class="callout navy" style="margin-top:28px">
-      <strong>The Philippine Top-Up Ecosystem:</strong> The Philippines has one of the most vibrant top-up ecosystems in Southeast Asia. Unlike Western markets where purchases flow almost exclusively through Google Play and the App Store, Filipino gamers frequently use third-party top-up platforms to purchase in-game currency, diamonds, and battle passes — often at discounted rates or via local payment methods like GCash, Maya, and over-the-counter payments at convenience stores (7-Eleven, SM Bills Payment, etc.) and sari-sari stores. This ecosystem is powered by a mix of regional platforms (UniPin, Codashop, JollyMax, Joytify), local platforms (Creamstore.ph, VeeWise Sari-Sari Store), and global platforms (SEAGM, Razer Gold). The competition among these platforms keeps prices competitive and drives high adoption. VeeWise Sari-Sari Store, famously endorsed by Filipino esports icons V33Wise, represents how deeply gaming culture has merged with mainstream commerce in the Philippines.
+      <strong>The Philippine Top-Up Ecosystem:</strong> The Philippines has one of the most vibrant top-up ecosystems in Southeast Asia. Unlike Western markets where purchases flow almost exclusively through Google Play and the App Store, Filipino gamers frequently use third-party top-up platforms to purchase in-game currency, diamonds, and battle passes — often at discounted rates or via local payment methods like GCash, Maya, and over-the-counter payments at convenience stores (7-Eleven, Ministop) and sari-sari stores. This ecosystem is powered by a mix of regional platforms (UniPin, Codashop, JollyMax, Joytify), local platforms (Creamstore.ph, VeeWise Sari-Sari Store), and global platforms (SEAGM, Razer Gold). The competition among these platforms keeps prices competitive and drives high adoption. VeeWise Sari-Sari Store, famously endorsed by Filipino esports icons V33Wise, represents how deeply gaming culture has merged with mainstream commerce in the Philippines.
     </div>
   </div>
 </section>
@@ -350,12 +381,44 @@ footer strong{color:#fff}
 </section>
 
 
+<section id="faq-section" class="alt-bg">
+  <div class="container">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <p class="section-subtitle">Key questions about Philippine gaming revenue, platforms, pins availability, and publishers.</p>
+
+    <div class="faq-item">
+      <h3 class="faq-question">1. What are the top 20 games in the Philippines?</h3>
+      <div class="faq-answer" id="faq-top20"></div>
+    </div>
+
+    <div class="faq-item">
+      <h3 class="faq-question">2. What are their estimated annual revenues from pins sales?</h3>
+      <div class="faq-answer" id="faq-revenue"></div>
+    </div>
+
+    <div class="faq-item">
+      <h3 class="faq-question">3. What platforms are they operating on (PlayStation, Desktop, Mobile, etc.)?</h3>
+      <div class="faq-answer" id="faq-platforms"></div>
+    </div>
+
+    <div class="faq-item">
+      <h3 class="faq-question">4. Where can their pins be purchased (Razer, UniPin, Direct, etc.)?</h3>
+      <div class="faq-answer" id="faq-stores"></div>
+    </div>
+
+    <div class="faq-item">
+      <h3 class="faq-question">5. Who are the publishers and what is their operating office address for PH operations?</h3>
+      <div class="faq-answer" id="faq-publishers"></div>
+    </div>
+  </div>
+</section>
+
 </div><!-- #app -->
 
 <footer>
   <div class="container">
-    <p><strong>Data Sources:</strong> AppFigures &amp; SensorTower — All figures represent <strong>estimated per-month revenue</strong></p>
-    <p>Ad-revenue games adjusted at 0.2x multiplier for spender-only estimation. Monthly revenue distributed equally across listed top-up stores.</p>
+    <p><strong>Data Sources:</strong> AppFigures &amp; SensorTower — Figures represent <strong>estimated annual &amp; monthly revenue</strong></p>
+    <p>Ad-revenue games adjusted at 0.2x multiplier for spender-only estimation. Annual estimates = monthly × 12. Revenue distributed equally across listed top-up stores.</p>
     <p style="margin-top:8px;opacity:0.6">Generated May 2026 | CSV data loaded at runtime — edit the source files to update the report.</p>
   </div>
 </footer>
@@ -382,6 +445,63 @@ const STORE_INFO = {
 "Creamstore.ph":{flag:"🇵🇭",hq:"Philippines",coverage:"Locally focused exclusively on the Philippine gaming market. Commonly used by Mobile Legends players."},
 "VeeWise Sari-Sari Store":{flag:"🇵🇭",hq:"Philippines",coverage:"Locally focused exclusively on the Philippines. Digital merchant platform famously endorsed/owned by Filipino esports icons V33Wise."},
 "Smile.One":{flag:"🇨🇳",hq:"China",coverage:"Operates heavily in international emerging markets including Southeast Asia (Philippines, Indonesia) and Latin America (Brazil)."}
+};
+
+const GAME_PLATFORMS = {
+"Mobile Legends: Bang Bang":["Mobile"],
+"Last War: Survival":["Mobile"],
+"Candy Crush Saga":["Mobile"],
+"Call of Duty: Mobile - Garena":["Mobile"],
+"Clash of Clans":["Mobile"],
+"Last Z: Survival Shooters":["Mobile"],
+"Gossip Harbor®: Merge & Story":["Mobile"],
+"Gossip Harbor: Merge & Story":["Mobile"],
+"Royal Match":["Mobile"],
+"PUBG MOBILE":["Mobile"],
+"Heartopia":["Mobile"],
+"Coin Master":["Mobile"],
+"Ragnarok Origin Classic":["Mobile"],
+"MIR4":["Mobile","Desktop"],
+"Kingshot":["Mobile"],
+"Whiteout Survival":["Mobile","Desktop"],
+"Love and Deepspace":["Mobile","Desktop"],
+"Roblox":["Mobile","Desktop","Xbox"],
+"Township":["Mobile"],
+"Gardenscapes":["Mobile"],
+"Genshin Impact":["Mobile","Desktop","PlayStation"],
+"Honkai: Star Rail":["Mobile","Desktop","PlayStation"],
+"Tasty Travels: Merge Game":["Mobile"],
+"Magic Chess: Go Go":["Mobile"],
+"Total Battle: Strategy Game":["Mobile","Desktop"],
+"Free Fire: Undersea Legends":["Mobile"],
+"Free Fire MAX":["Mobile"],
+"Wuthering Waves":["Mobile","Desktop"],
+"Brawl Stars":["Mobile"],
+"Blood Strike - FPS for all":["Mobile","Desktop"],
+"Castle Busters":["Mobile"],
+"Honor of Kings":["Mobile"],
+"Solo Leveling:Arise":["Mobile","Desktop"],
+"Diablo Immortal":["Mobile","Desktop"],
+"League of Legends: Wild Rift":["Mobile"],
+"Crossfire: Legends":["Mobile"],
+"War Robots Multiplayer Battles":["Mobile","Desktop"],
+"NIGHT CROWS":["Mobile","Desktop"],
+"LEGEND OF YMIR":["Mobile","Desktop"],
+"LORDNINE: Infinite Class":["Mobile"],
+"Where Winds Meet":["Mobile","Desktop","PlayStation"],
+"Crazy Odyssey":["Mobile"],
+"Archero 2":["Mobile"],
+"Dicero":["Mobile"],
+"Last Day on Earh: Survival":["Mobile"],
+"Last Day on Earth: Survival":["Mobile"],
+"Modern Warships: Naval Battles":["Mobile","Desktop"],
+"Mech Assemble: Zombie Swarm":["Mobile"],
+"NTE: Neverness to Everness":["Mobile","Desktop"],
+"World War Heroes — WW2 PvP FPS":["Mobile"],
+"Sunday City: Life Simulator":["Mobile"],
+"MU2: Dark Epoch":["Mobile","Desktop"],
+"Marvel Future Fight":["Mobile"],
+"Clash Royale":["Mobile"]
 };
 
 const COLORS = ['#1B2A4A','#2A9D8F','#E9C46A','#E76F51','#264653','#52796F','#F4A261','#A8DADC','#457B9D','#BC6C25','#6D6875','#B5838D','#FFB4A2','#CDB4DB','#84A59D','#F28482','#355070','#EAAC8B','#9B2226','#AE2012'];
@@ -417,7 +537,8 @@ function parseRow(row) {
     topUpStores: stores,
     revenueSources: revSources,
     hasAds: revSources.some(s=>s.toLowerCase()==='ads'),
-    source: (row['Data Source']||'').trim()
+    source: (row['Data Source']||'').trim(),
+    operatingOffice: (row['Operating Office']||'').trim()
   };
 }
 
@@ -456,7 +577,7 @@ function aggregateByGame(rows) {
   const m=new Map();
   rows.forEach(r=>{
     const a=adj(r);
-    if(!m.has(r.game)){m.set(r.game,{game:r.game,publisher:r.publisher,country:r.country,adjRevenue:0,rawRevenue:0,iosAdj:0,androidAdj:0,stores:new Set(),hasAds:false,platforms:new Set()});}
+    if(!m.has(r.game)){m.set(r.game,{game:r.game,publisher:r.publisher,country:r.country,operatingOffice:r.operatingOffice,adjRevenue:0,rawRevenue:0,iosAdj:0,androidAdj:0,stores:new Set(),hasAds:false,platforms:new Set()});}
     const e=m.get(r.game);
     e.adjRevenue+=a;e.rawRevenue+=r.phRevenue;
     if(r.platform==='iOS')e.iosAdj+=a;else e.androidAdj+=a;
@@ -501,6 +622,7 @@ function updateAll() {
 
   const totalAdj=games.reduce((s,g)=>s+g.adjRevenue,0);
   document.getElementById('kpi-revenue').textContent=cur(totalAdj);
+  document.getElementById('kpi-annual-revenue').textContent=cur(totalAdj*12);
   document.getElementById('kpi-games').textContent=games.length;
   document.getElementById('kpi-top-game').textContent=shortName(games[0]?.game||'—');
   const pubs=new Map();
@@ -508,22 +630,40 @@ function updateAll() {
   const topPub=[...pubs.entries()].sort((a,b)=>b[1]-a[1])[0];
   document.getElementById('kpi-top-publisher').textContent=topPub?topPub[0].substring(0,20):'—';
 
-  // Ranking list
+  // Ranking list (enhanced with annual revenue, platforms, stores, address)
   const list=document.getElementById('rankingList');
   list.innerHTML='';
   games.forEach((g,i)=>{
+    const allPlatforms=GAME_PLATFORMS[g.game]||['Mobile'];
+    const platformBadges=allPlatforms.map(p=>{
+      const cls=p==='Mobile'?'mobile':p==='Desktop'?'desktop':p==='PlayStation'?'playstation':p==='Xbox'?'xbox':'mobile';
+      const icon=p==='Mobile'?'📱':p==='Desktop'?'🖥️':p==='PlayStation'?'🎮':p==='Xbox'?'🎮':'📱';
+      return `<span class="platform-badge ${cls}">${icon} ${p}</span>`;
+    }).join('');
+    const storeTags=[...g.stores].map(s=>`<span class="store-tag">${s}</span>`).join('');
+    const annualRev=g.adjRevenue*12;
     const li=document.createElement('li');
-    li.className='ranking-item';
-    const platforms=[...g.platforms].join(' & ');
+    li.className='ranking-item-enhanced';
     li.innerHTML=`
-      <div class="rank-num ${i<3?'top3':''}">${i+1}</div>
-      <div class="rank-info">
-        <div class="rank-game">${shortName(g.game)} <span class="rank-badge ${g.hasAds?'badge-ads':'badge-iap'}">${g.hasAds?'Ad-Adjusted':'IAP/Subs'}</span></div>
-        <div class="rank-meta">${g.publisher} · ${g.country} · ${platforms}</div>
-      </div>
-      <div class="rank-revenue">
-        <div class="amount">${cur(g.adjRevenue)}<span style="font-size:0.7rem;font-weight:500;color:var(--text2)">/mo</span></div>
-        ${g.hasAds?`<div class="sub">Raw: ${cur(g.rawRevenue)}/mo</div>`:''}
+      <div class="rank-header">
+        <div class="rank-num ${i<3?'top3':''}" style="padding-top:2px">${i+1}</div>
+        <div class="rank-info-enhanced">
+          <div class="rank-top-line">
+            <div>
+              <div class="rank-game">${shortName(g.game)} <span class="rank-badge ${g.hasAds?'badge-ads':'badge-iap'}">${g.hasAds?'Ad-Adjusted':'IAP/Subs'}</span></div>
+              <div class="rank-publisher">${g.publisher} · ${g.country}</div>
+            </div>
+            <div class="rank-revenue-enhanced">
+              <div class="annual-amount">${cur(annualRev)}<span style="font-size:0.7rem;font-weight:500;color:var(--text2)">/yr</span></div>
+              <div class="monthly-amount">${cur(g.adjRevenue)}/mo${g.hasAds?' (adj)':''}</div>
+              ${g.hasAds?`<div class="monthly-amount">Raw: ${cur(g.rawRevenue)}/mo</div>`:''}
+            </div>
+          </div>
+          <div class="rank-address">📍 ${g.operatingOffice||'Address not available'}</div>
+          <div class="rank-platforms">${platformBadges}</div>
+          <div class="rank-stores-label">Where to buy pins / top-up:</div>
+          <div class="rank-stores">${storeTags}</div>
+        </div>
       </div>`;
     list.appendChild(li);
   });
@@ -622,6 +762,55 @@ function updateAll() {
     tbody.appendChild(tr);
   });
   dataTable=new DataTable('#dataTable',{pageLength:25,order:[[7,'desc']],responsive:true,language:{search:'Filter:'}});
+
+  // FAQ dynamic content
+  updateFAQ(games);
+}
+
+function updateFAQ(games) {
+  const top20=games.slice(0,20);
+  const totalAnnual=games.reduce((s,g)=>s+g.adjRevenue*12,0);
+
+  const faq1=document.getElementById('faq-top20');
+  if(faq1){
+    faq1.innerHTML='<p>Based on estimated PH spender revenue (averaged from AppFigures &amp; SensorTower), the top 20 games are:</p><ol>'+top20.map(g=>
+      `<li><strong>${shortName(g.game)}</strong> — ${g.publisher} (${cur(g.adjRevenue*12)}/yr est.)</li>`
+    ).join('')+'</ol>';
+  }
+
+  const faq2=document.getElementById('faq-revenue');
+  if(faq2){
+    faq2.innerHTML=`<p>The top ${games.length} tracked games generate an estimated <strong>${cur(totalAnnual)}</strong> in total annual PH pins/top-up revenue. The top 20 breakdown:</p>
+    <ol>${top20.map(g=>`<li><strong>${shortName(g.game)}</strong>: ${cur(g.adjRevenue*12)}/yr (${cur(g.adjRevenue)}/mo)</li>`).join('')}</ol>
+    <p style="margin-top:8px;font-size:0.85rem;color:var(--text2)"><em>Note: These figures are estimates based on third-party analytics. Ad-heavy games are adjusted at 0.2x to approximate spender-only revenue. Actual revenue may vary.</em></p>`;
+  }
+
+  const faq3=document.getElementById('faq-platforms');
+  if(faq3){
+    faq3.innerHTML='<p>Most top PH games are mobile-first, but several also operate on Desktop (PC) and consoles. Platform breakdown for the top 20:</p><ol>'+top20.map(g=>{
+      const plats=GAME_PLATFORMS[g.game]||['Mobile'];
+      return `<li><strong>${shortName(g.game)}</strong>: ${plats.join(', ')}</li>`;
+    }).join('')+'</ol><p style="margin-top:8px;font-size:0.85rem;color:var(--text2)"><em>The revenue data in this report covers mobile (iOS + Android) only. PC and console revenue from the same titles is not included in the figures above.</em></p>';
+  }
+
+  const faq4=document.getElementById('faq-stores');
+  if(faq4){
+    faq4.innerHTML='<p>Filipino gamers can purchase pins and top-ups through a mix of in-game stores, regional platforms (Codashop, UniPin, JollyMax), and local stores (Creamstore.ph, VeeWise). Availability per game:</p><ol>'+top20.map(g=>
+      `<li><strong>${shortName(g.game)}</strong>: ${[...g.stores].join(', ')}</li>`
+    ).join('')+'</ol>';
+  }
+
+  const faq5=document.getElementById('faq-publishers');
+  if(faq5){
+    const pubMap=new Map();
+    top20.forEach(g=>{
+      if(!pubMap.has(g.publisher))pubMap.set(g.publisher,{games:[],address:g.operatingOffice,country:g.country});
+      pubMap.get(g.publisher).games.push(shortName(g.game));
+    });
+    faq5.innerHTML='<p>Publishers behind the top 20 PH games, with their registered operating office (PH local office where available, otherwise global HQ):</p><ul>'+[...pubMap.entries()].map(([pub,info])=>
+      `<li><strong>${pub}</strong> (${info.country})<br><span style="font-size:0.85rem;color:var(--text2)">📍 ${info.address}</span><br><span style="font-size:0.85rem">Games: ${info.games.join(', ')}</span></li>`
+    ).join('')+'</ul>';
+  }
 }
 
 function initCharts() {
